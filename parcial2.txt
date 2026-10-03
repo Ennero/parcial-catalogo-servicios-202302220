@@ -1,0 +1,84 @@
+================================================================================
+PARCIAL PRÁCTICO (25 PUNTOS) — SOFTWARE AVANZADO USAC
+SISTEMA DE GESTIÓN DEL CATÁLOGO DE SERVICIOS DE TI
+================================================================================
+
+DATOS DEL ESTUDIANTE:
+---------------------
+Nombre Completo: Enner
+Carné Universitario: 202302220
+Asignatura: Software Avanzado
+Catedrático Evaluador: Marco Tulio Aldana Prillwitz (Usuario GitHub: maldanap-usac)
+Fecha de Entrega: 04 de Octubre de 2026, 23:00
+
+
+DATOS OBLIGATORIOS DE ENTREGA (SECCIÓN 7 DEL ENUNCIADO):
+--------------------------------------------------------
+1. URL del Repositorio en GitHub:
+   https://github.com/Ennero/parcial-catalogo-servicios-202302220
+
+2. Rama de Entrega:
+   main
+
+3. SHA del Commit Final:
+   5b3ab6f184bed94afb443d05f21790e0056766f6
+
+4. Etiqueta Oficial de Entrega (Tag Git):
+   parcial-v2.0
+
+5. Estado del Colaborador Evaluador:
+   Usuario 'maldanap-usac' agregado como colaborador con permisos de clonado y revisión.
+
+
+INSTRUCCIONES DE DESPLIEGUE RÁPIDO CON DOCKER (UN SOLO COMANDO):
+----------------------------------------------------------------
+1. Clonar el repositorio y posicionarse en la etiqueta de entrega:
+   git clone https://github.com/Ennero/parcial-catalogo-servicios-202302220.git
+   cd parcial-catalogo-servicios-202302220
+   git checkout parcial-v2.0
+
+2. Levantar la aplicación con Docker Compose:
+   docker compose up --build -d
+
+   (El arranque despliega automáticamente MariaDB 11, backend NestJS y frontend Next.js,
+    ejecuta las migraciones e importa los 12 N1 y 46 N2 del archivo Excel en el primer inicio).
+
+3. URLs de Acceso:
+   - Aplicación Web (Frontend): http://localhost:3000
+   - Consola de Pruebas Web (Harness): http://localhost:3000/harness
+   - Catálogo de Servicios: http://localhost:3000/catalogo
+   - Estructura Organizacional (6 niveles): http://localhost:3000/organizacion
+   - API REST (Backend): http://localhost:4000
+
+
+CUENTAS DE EVALUACIÓN PRECONFIGURADAS (BOTONES DE 1 CLIC EN /login):
+-------------------------------------------------------------------
+- Administrador General: admin@usac.edu / Admin123! (Rol: administrador)
+- Auditor de Consulta:   consulta@usac.edu / Consulta123! (Rol: consulta)
+- CISO TI / Seguridad:  seguridad@usac.edu / Seguridad123! (Rol: administrador)
+- Mesa de Ayuda:         soporte@usac.edu / Soporte123! (Rol: consulta)
+- Usuario Inactivo (P02): inactivo@usac.edu / Inactivo123! (Prueba inmediata de bloqueo 401)
+
+
+EJECUCIÓN DEL HARNESS DE PRUEBAS AUTOMATIZADAS (P01 A P12):
+-----------------------------------------------------------
+Opción A (Terminal / Recomendado para calificación):
+   docker compose exec backend npm test
+   # o mediante el script:
+   ./scripts/run_tests.sh
+
+Opción B (Interfaz Web Interactiva):
+   Ingresar a http://localhost:3000/harness y presionar "Ejecutar Suite Completa".
+   Resultado verificado: 12 de 12 pruebas PASSED (100% de éxito).
+
+
+MAPEO DE DOCUMENTACIÓN OBLIGATORIA EN EL REPOSITORIO:
+-----------------------------------------------------
+- docs/RESOLUCION.md: Informe técnico integral respondiendo a los 10 puntos del enunciado.
+- docs/CRITERIOS_ACEPTACION.md: Matriz exhaustiva de criterios de aceptación vs. los 100 puntos de la rúbrica.
+- AGENTS.md: Contexto operativo versionado para asistentes de IA y regla Data Trust Boundary.
+- docs/context/CONTEXT_SPEC.md: Evidencia de Context Engineering y justificación de actualizaciones.
+- docs/prompts/PROMPTS_ENGINEERING.md: Evidencia de Prompt Engineering (7 prompts y 4 iteraciones).
+- docs/harness_evidence/HARNESS_EVIDENCE.md: Evidencia de Harness Engineering y ciclo de corrección.
+- README.md: Guía general y manual de arranque paso a paso.
+================================================================================
