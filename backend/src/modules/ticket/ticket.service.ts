@@ -332,6 +332,7 @@ export class TicketService {
 
     const colaAnteriorNombre = ticket.cola.nombre;
     ticket.colaId = colaDestino.id;
+    ticket.cola = colaDestino;
     ticket.proceso = colaDestino.proceso; // Alineación con el proceso de la nueva cola
 
     await this.ticketRepo.save(ticket);
@@ -1035,9 +1036,9 @@ export class TicketService {
           fechaPrimeraRespuesta:
             estado !== 'nuevo' ? new Date(fechaCreacion.getTime() + 25 * 60000) : null,
           fechaResolucion: estado === 'resuelto' ? ahora : null,
-          fechaCierre: estado === 'cerrado' ? ahora : null,
+          fechaCierre: (estado as string) === 'cerrado' ? ahora : null,
           solucionAplicada:
-            estado === 'resuelto' || estado === 'cerrado'
+            (estado as string) === 'resuelto' || (estado as string) === 'cerrado'
               ? 'Atención completada satisfactoriamente con validación del usuario.'
               : null,
         });
