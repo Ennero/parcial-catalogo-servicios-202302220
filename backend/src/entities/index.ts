@@ -11,3 +11,19 @@ export * from './servicio-n1.entity';
 export * from './servicio-n2.entity';
 export * from './importacion-log.entity';
 export * from './importacion-observacion.entity';
+
+// Nuevas entidades para Service Desk ITIL y CMDB
+export * from './cmdb-categoria.entity';
+export * from './cmdb-ci.entity';
+export * from './cmdb-relacion.entity';
+export * from './cmdb-ci-servicio.entity';
+export * from './cola-atencion.entity';
+export * from './cola-usuario.entity';
+export * from './cola-rol.entity';
+export * from './ticket.entity';
+export * from './ticket-comentario.entity';
+export * from './ticket-adjunto.entity';
+export * from './ticket-bitacora.entity';
+export * from './ticket-relacion.entity';
+export * from './ticket-ci.entity';
+export * from './faq-articulo.entity';
