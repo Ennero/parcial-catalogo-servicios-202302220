@@ -14,6 +14,9 @@ import { ServicioN2 } from './servicio-n2.entity';
 export enum UserRole {
   ADMINISTRADOR = 'administrador',
   CONSULTA = 'consulta',
+  AGENTE = 'agente',
+  APROBADOR = 'aprobador',
+  SOLICITANTE = 'solicitante',
 }
 
 @Entity('usuarios')
@@ -39,6 +42,9 @@ export class Usuario {
     default: UserRole.CONSULTA,
   })
   rol: UserRole;
+
+  @Column({ type: 'text', nullable: true, name: 'roles_secundarios' })
+  rolesSecundarios: string | null; // Lista de roles adicionales separados por coma, e.g. "agente,aprobador"
 
   @Column({ default: true })
   activo: boolean;
