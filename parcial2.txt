@@ -21,7 +21,7 @@ DATOS OBLIGATORIOS DE ENTREGA (SECCIÓN 7 DEL ENUNCIADO):
    main
 
 3. SHA del Commit Final:
-   5b3ab6f184bed94afb443d05f21790e0056766f6
+   932eb164a5fa4201da5768a89156ffd2f134e979
 
 4. Etiqueta Oficial de Entrega (Tag Git):
    parcial-v2.0

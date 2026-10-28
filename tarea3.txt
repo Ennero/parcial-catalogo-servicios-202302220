@@ -1,0 +1,104 @@
+================================================================================
+PARCIAL PRÁCTICO 3 — SOFTWARE AVANZADO USAC
+TAREA INDIVIDUAL: SISTEMA DE TICKETS Y GESTIÓN DE CMDB CON INGENIERÍA ASISTIDA POR IA
+================================================================================
+
+DATOS DEL ESTUDIANTE:
+---------------------
+Nombre: Enner
+Carné Universitario: 202302220
+Asignatura: Software Avanzado
+Catedrático Evaluador: Marco Tulio Aldana Prillwitz (GitHub: maldanap-usac)
+Fecha de Entrega: Miércoles 28 de Octubre de 2026
+Defensa Individual: 28 y 30 de Octubre de 2026
+
+
+DATOS OBLIGATORIOS DE ENTREGA Y EVALUACIÓN:
+-------------------------------------------
+1. URL Oficial del Repositorio en GitHub:
+   https://github.com/Ennero/parcial-catalogo-servicios-202302220
+
+2. Rama de Entrega:
+   main
+
+3. Etiqueta Oficial de Entrega (Git Tag):
+   tarea-v3.0
+
+4. Colaborador Evaluador:
+   Usuario 'maldanap-usac' con permisos de clonado, auditoría y revisión en el repositorio.
+
+
+INSTRUCCIONES DE CONSTRUCCIÓN Y DESPLIEGUE CON DOCKER (UN SOLO COMANDO):
+-------------------------------------------------------------------------
+1. Clonar el repositorio y situarse en la etiqueta de entrega:
+   git clone https://github.com/Ennero/parcial-catalogo-servicios-202302220.git
+   cd parcial-catalogo-servicios-202302220
+   git checkout tarea-v3.0
+
+2. Levantar la solución completa con Docker Compose:
+   docker compose up --build -d
+
+   (El arranque construye y despliega MariaDB 11 LTS, backend NestJS y frontend Next.js 14.
+    Ejecuta automáticamente los seeds de evaluación:
+    - 7 Colas de atención para los 7 procesos ITIL obligatorios.
+    - Taxonomía CMDB de 4 niveles con 5,000 CIs sintéticos reproducibles con semilla 202302220.
+    - 35 tickets de prueba en diferentes estados con casos E0-E3 e I0-I6.
+    - Catálogo de servicios base con 12 N1 y 46 N2 intactos).
+
+3. URLs de Acceso a la Aplicación:
+   - Tablero Principal (KPIs & SLAs):         http://localhost:3000
+   - Portal del Solicitante (FAQ L0 & Ticket): http://localhost:3000/portal
+   - Consola de Agentes (Tickets & Colas):     http://localhost:3000/tickets
+   - Explorador CMDB (5,000 CIs & Grafos):     http://localhost:3000/cmdb
+   - Panel Web de Pruebas (Harness P01-P18):   http://localhost:3000/harness
+   - Catálogo de Servicios N1/N2:              http://localhost:3000/catalogo
+   - Estructura Organizacional (6 niveles):    http://localhost:3000/organizacion
+   - API REST (Backend NestJS):                http://localhost:4000
+
+
+CUENTAS DE EVALUACIÓN DE DEMOSTRACIÓN (BOTONES DE 1 CLIC EN /login):
+---------------------------------------------------------------------
+- Administrador: admin@usac.edu / Admin123!
+  (Control total, configuración de colas, gestión de CMDB y administración).
+- Agente Técnico: agente@usac.edu / Agente123!
+  (Atención de tickets, diagnóstico, toma atómica concurrente y resolución).
+- Aprobador CAB:  aprobador@usac.edu / Aprobador123!
+  (Aprobación formal de Cambios RFC y solicitudes de acceso).
+- Solicitante:   solicitante@usac.edu / Solicitante123!
+  (Apertura y consulta de tickets en el Portal de Autoservicio L0).
+- Consulta:      consulta@usac.edu / Consulta123!
+  (Auditoría y solo lectura; mutaciones y toma de tickets bloqueadas en servidor - P06).
+- Inactivo:      inactivo@usac.edu / Inactivo123!
+  (Prueba inmediata P01 de rechazo a usuarios dados de baja).
+
+
+EJECUCIÓN DEL HARNESS DE PRUEBAS AUTOMATIZADAS (P01 A P18):
+-----------------------------------------------------------
+Opción A — Vía Terminal (CLI):
+   ./scripts/run_tests.sh
+   # O directamente en el contenedor:
+   docker compose exec backend npm run test:harness
+
+Opción B — Vía Interfaz Web Interactiva:
+   Ingresar a http://localhost:3000/harness y presionar "Ejecutar Suite Completa (P01 - P18)".
+   Resultado: 18 de 18 pruebas PASSED (100% de éxito).
+
+
+MAPEO DE DOCUMENTACIÓN OBLIGATORIA (SECCIÓN 12 DEL ENUNCIADO):
+---------------------------------------------------------------
+- README.md:
+  Instrucciones de clonado limpio, credenciales y despliegue Docker.
+- docs/RESOLUCION.md:
+  Alcance, arquitectura técnica, decisiones de ingeniería y rúbrica de 100 puntos.
+- docs/MODELO.md:
+  Diagrama Entidad-Relación Mermaid, diccionario de datos y taxonomía CMDB.
+- docs/PROCESOS.md:
+  Mapeo Slide 14 a 7 procesos ITIL, colas, matriz RBAC, diagramas y soporte L0-L4.
+- docs/IA.md:
+  Evidencias de Prompt Engineering (8 prompts y 2 mejoras), Context Engineering,
+  Harness Engineering, Loop Engineering (3 ciclos con fallos deliberados) y Graph Engineering.
+- docs/PRUEBAS.md:
+  Matriz de trazabilidad Requisito -> Implementación -> Prueba -> Evidencia real (P01 a P18).
+- AGENTS.md:
+  Contexto operativo versionado (v2.0.0) y regla Data Trust Boundary.
+================================================================================

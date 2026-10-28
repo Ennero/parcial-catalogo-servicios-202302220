@@ -3,7 +3,7 @@ import { AppModule } from '../../app.module';
 import { HarnessService } from './harness.service';
 import { INestApplication } from '@nestjs/common';
 
-describe('Suite de Pruebas Automatizadas del Harness (P01 - P12)', () => {
+describe('Suite de Pruebas Automatizadas del Harness (P01 - P18)', () => {
   let app: INestApplication;
   let harnessService: HarnessService;
 
@@ -16,7 +16,7 @@ describe('Suite de Pruebas Automatizadas del Harness (P01 - P12)', () => {
     await app.init();
 
     harnessService = app.get(HarnessService);
-  }, 60000);
+  }, 90000);
 
   afterAll(async () => {
     if (app) {
@@ -24,11 +24,11 @@ describe('Suite de Pruebas Automatizadas del Harness (P01 - P12)', () => {
     }
   });
 
-  it('Debe ejecutar y verificar satisfactoriamente los 12 escenarios de prueba (P01 a P12)', async () => {
+  it('Debe ejecutar y verificar satisfactoriamente los 18 escenarios de prueba (P01 a P18)', async () => {
     const { summary, results } = await harnessService.runAllTests();
 
     console.log('\n==================================================');
-    console.log(`REPORTE DE EJECUCIÓN DEL HARNESS DE PRUEBAS`);
+    console.log(`REPORTE DE EJECUCIÓN DEL HARNESS DE PRUEBAS (P01 - P18)`);
     console.log(`Total: ${summary.total} | Aprobados: ${summary.passed} | Fallidos: ${summary.failed}`);
     console.log(`Tasa de Éxito: ${summary.successRate}`);
     console.log('==================================================\n');
@@ -39,8 +39,8 @@ describe('Suite de Pruebas Automatizadas del Harness (P01 - P12)', () => {
       console.log(`    Detalles: ${r.details}`);
     });
 
-    expect(summary.total).toBe(12);
+    expect(summary.total).toBe(18);
     expect(summary.failed).toBe(0);
-    expect(summary.passed).toBe(12);
-  }, 120000);
+    expect(summary.passed).toBe(18);
+  }, 180000);
 });

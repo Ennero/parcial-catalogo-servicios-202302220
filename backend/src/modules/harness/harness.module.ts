@@ -7,6 +7,9 @@ import { AuthModule } from '../auth/auth.module';
 import { OrganizationModule } from '../organization/organization.module';
 import { CatalogModule } from '../catalog/catalog.module';
 import { ImporterModule } from '../importer/importer.module';
+import { CmdbModule } from '../cmdb/cmdb.module';
+import { QueueModule } from '../queue/queue.module';
+import { TicketModule } from '../ticket/ticket.module';
 import { HarnessService } from './harness.service';
 import { HarnessController } from './harness.controller';
 
@@ -17,6 +20,9 @@ import { HarnessController } from './harness.controller';
     OrganizationModule,
     CatalogModule,
     ImporterModule,
+    CmdbModule,
+    QueueModule,
+    TicketModule,
   ],
   controllers: [HarnessController],
   providers: [HarnessService],

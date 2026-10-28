@@ -44,7 +44,9 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    const errorMsg = data?.message || (Array.isArray(data?.message) ? data.message.join(', ') : 'Error en la petición al servidor.');
+    const errorMsg =
+      data?.message ||
+      (Array.isArray(data?.message) ? data.message.join(', ') : 'Error en la petición al servidor.');
     throw new Error(errorMsg);
   }
 
@@ -107,18 +109,117 @@ export const api = {
     getPuestos: (seccionId?: number) =>
       request<any[]>(`/organization/puestos${seccionId ? `?seccionId=${seccionId}` : ''}`),
     getUsuarios: () => request<any[]>('/organization/usuarios'),
-    createEmpresa: (data: any) => request<any>('/organization/empresas', { method: 'POST', body: JSON.stringify(data) }),
-    updateEmpresa: (id: number, data: any) => request<any>(`/organization/empresas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    createArea: (data: any) => request<any>('/organization/areas', { method: 'POST', body: JSON.stringify(data) }),
-    updateArea: (id: number, data: any) => request<any>(`/organization/areas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    createDepartamento: (data: any) => request<any>('/organization/departamentos', { method: 'POST', body: JSON.stringify(data) }),
-    updateDepartamento: (id: number, data: any) => request<any>(`/organization/departamentos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    createSeccion: (data: any) => request<any>('/organization/secciones', { method: 'POST', body: JSON.stringify(data) }),
-    updateSeccion: (id: number, data: any) => request<any>(`/organization/secciones/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    createPuesto: (data: any) => request<any>('/organization/puestos', { method: 'POST', body: JSON.stringify(data) }),
-    updatePuesto: (id: number, data: any) => request<any>(`/organization/puestos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    createUsuario: (data: any) => request<any>('/organization/usuarios', { method: 'POST', body: JSON.stringify(data) }),
-    updateUsuario: (id: number, data: any) => request<any>(`/organization/usuarios/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createEmpresa: (data: any) =>
+      request<any>('/organization/empresas', { method: 'POST', body: JSON.stringify(data) }),
+    updateEmpresa: (id: number, data: any) =>
+      request<any>(`/organization/empresas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createArea: (data: any) =>
+      request<any>('/organization/areas', { method: 'POST', body: JSON.stringify(data) }),
+    updateArea: (id: number, data: any) =>
+      request<any>(`/organization/areas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createDepartamento: (data: any) =>
+      request<any>('/organization/departamentos', { method: 'POST', body: JSON.stringify(data) }),
+    updateDepartamento: (id: number, data: any) =>
+      request<any>(`/organization/departamentos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createSeccion: (data: any) =>
+      request<any>('/organization/secciones', { method: 'POST', body: JSON.stringify(data) }),
+    updateSeccion: (id: number, data: any) =>
+      request<any>(`/organization/secciones/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createPuesto: (data: any) =>
+      request<any>('/organization/puestos', { method: 'POST', body: JSON.stringify(data) }),
+    updatePuesto: (id: number, data: any) =>
+      request<any>(`/organization/puestos/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    createUsuario: (data: any) =>
+      request<any>('/organization/usuarios', { method: 'POST', body: JSON.stringify(data) }),
+    updateUsuario: (id: number, data: any) =>
+      request<any>(`/organization/usuarios/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  },
+
+  // CMDB
+  cmdb: {
+    getCategorias: () => request<any[]>('/cmdb/categorias'),
+    seedCategorias: () => request<any>('/cmdb/categorias/seed', { method: 'POST' }),
+    createCategoria: (data: any) =>
+      request<any>('/cmdb/categorias', { method: 'POST', body: JSON.stringify(data) }),
+    generarSinteticos: (data: any = {}) =>
+      request<any>('/cmdb/generar-sinteticos', { method: 'POST', body: JSON.stringify(data) }),
+    getCis: (params: Record<string, any> = {}) => {
+      const q = new URLSearchParams();
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== '') q.append(k, String(v));
+      });
+      return request<{
+        data: any[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        duracionMs: number;
+      }>(`/cmdb/cis?${q.toString()}`);
+    },
+    getCiById: (id: number) => request<any>(`/cmdb/cis/${id}`),
+    createRelacion: (data: any) =>
+      request<any>('/cmdb/relaciones', { method: 'POST', body: JSON.stringify(data) }),
+    vincularServicio: (data: any) =>
+      request<any>('/cmdb/vincular-servicio', { method: 'POST', body: JSON.stringify(data) }),
+    getImpactedServices: (ciId: number) => request<any>(`/cmdb/cis/${ciId}/impacto`),
+  },
+
+  // Colas
+  queue: {
+    getColas: () => request<any[]>('/colas'),
+    getColaById: (id: number) => request<any>(`/colas/${id}`),
+    createCola: (data: any) =>
+      request<any>('/colas', { method: 'POST', body: JSON.stringify(data) }),
+    updateCola: (id: number, data: any) =>
+      request<any>(`/colas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    asignarUsuario: (data: any) =>
+      request<any>('/colas/asignar-usuario', { method: 'POST', body: JSON.stringify(data) }),
+    asignarRol: (data: any) =>
+      request<any>('/colas/asignar-rol', { method: 'POST', body: JSON.stringify(data) }),
+    verificarPermiso: (colaId: number, accion: string) =>
+      request<{ colaId: number; accion: string; permitido: boolean }>(
+        `/colas/${colaId}/permiso?accion=${accion}`,
+      ),
+  },
+
+  // Tickets
+  tickets: {
+    getTickets: (params: Record<string, any> = {}) => {
+      const q = new URLSearchParams();
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== '') q.append(k, String(v));
+      });
+      return request<{
+        data: any[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      }>(`/tickets?${q.toString()}`);
+    },
+    getTicketById: (id: number) => request<any>(`/tickets/${id}`),
+    createTicket: (data: any) =>
+      request<any>('/tickets', { method: 'POST', body: JSON.stringify(data) }),
+    tomarTicket: (id: number) => request<any>(`/tickets/${id}/tomar`, { method: 'POST' }),
+    cambiarEstado: (id: number, data: any) =>
+      request<any>(`/tickets/${id}/estado`, { method: 'PUT', body: JSON.stringify(data) }),
+    transferirTicket: (id: number, data: any) =>
+      request<any>(`/tickets/${id}/transferir`, { method: 'PUT', body: JSON.stringify(data) }),
+    reabrirTicket: (id: number, data: any) =>
+      request<any>(`/tickets/${id}/reabrir`, { method: 'POST', body: JSON.stringify(data) }),
+    addComentario: (id: number, data: any) =>
+      request<any>(`/tickets/${id}/comentarios`, { method: 'POST', body: JSON.stringify(data) }),
+    relacionarTickets: (id: number, data: any) =>
+      request<any>(`/tickets/${id}/relacionar`, { method: 'POST', body: JSON.stringify(data) }),
+    getDashboardMetrics: () => request<any>('/tickets/metricas/dashboard'),
+    seedDemo: () => request<any>('/tickets/seed-demo', { method: 'POST' }),
+    getFaqs: (search?: string) =>
+      request<any[]>(`/tickets/faqs${search ? `?search=${encodeURIComponent(search)}` : ''}`),
+    createFaq: (data: any) =>
+      request<any>('/tickets/faqs', { method: 'POST', body: JSON.stringify(data) }),
+    marcarUtilFaq: (id: number) =>
+      request<any>(`/tickets/faqs/${id}/util`, { method: 'POST' }),
   },
 
   // Importador
@@ -136,6 +237,10 @@ export const api = {
     getStatus: () => request<any>('/harness/status'),
     run: () =>
       request<any>('/harness/run', {
+        method: 'POST',
+      }),
+    runSingle: (id: string) =>
+      request<any>(`/harness/run/${id}`, {
         method: 'POST',
       }),
   },

@@ -17,6 +17,20 @@ import {
   ServicioN2,
   ImportacionLog,
   ImportacionObservacion,
+  CmdbCategoria,
+  CmdbCi,
+  CmdbRelacion,
+  CmdbCiServicio,
+  ColaAtencion,
+  ColaUsuario,
+  ColaRol,
+  Ticket,
+  TicketComentario,
+  TicketAdjunto,
+  TicketBitacora,
+  TicketRelacion,
+  TicketCi,
+  FaqArticulo,
 } from './entities';
 
 import { AuthModule } from './modules/auth/auth.module';
@@ -24,6 +38,9 @@ import { OrganizationModule } from './modules/organization/organization.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { ImporterModule } from './modules/importer/importer.module';
 import { HarnessModule } from './modules/harness/harness.module';
+import { CmdbModule } from './modules/cmdb/cmdb.module';
+import { QueueModule } from './modules/queue/queue.module';
+import { TicketModule } from './modules/ticket/ticket.module';
 import { runSeeds } from './seeds/seed';
 
 @Module({
@@ -55,6 +72,20 @@ import { runSeeds } from './seeds/seed';
           ServicioN2,
           ImportacionLog,
           ImportacionObservacion,
+          CmdbCategoria,
+          CmdbCi,
+          CmdbRelacion,
+          CmdbCiServicio,
+          ColaAtencion,
+          ColaUsuario,
+          ColaRol,
+          Ticket,
+          TicketComentario,
+          TicketAdjunto,
+          TicketBitacora,
+          TicketRelacion,
+          TicketCi,
+          FaqArticulo,
         ],
         synchronize: true, // Sincronización automática de esquema para ambiente Docker de evaluación
         logging: false,
@@ -65,6 +96,9 @@ import { runSeeds } from './seeds/seed';
     OrganizationModule,
     CatalogModule,
     ImporterModule,
+    CmdbModule,
+    QueueModule,
+    TicketModule,
     HarnessModule,
   ],
 })

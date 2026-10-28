@@ -1,6 +1,6 @@
 {
   "name": "catalogo-servicios-backend",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Backend API para Sistema de Gestión de Catálogo de Servicios TI con NestJS y MariaDB",
   "author": "Enner - 202302220",
   "private": true,
