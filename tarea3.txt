@@ -21,10 +21,13 @@ DATOS OBLIGATORIOS DE ENTREGA Y EVALUACIÓN:
 2. Rama de Entrega:
    main
 
-3. Etiqueta Oficial de Entrega (Git Tag):
+3. SHA del Commit Final:
+   5535de0bf94c3fa4660d7b09514c8f24afb0109e
+
+4. Etiqueta Oficial de Entrega (Git Tag):
    tarea-v3.0
 
-4. Colaborador Evaluador:
+5. Colaborador Evaluador:
    Usuario 'maldanap-usac' con permisos de clonado, auditoría y revisión en el repositorio.
 
 
