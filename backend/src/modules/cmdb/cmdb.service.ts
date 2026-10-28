@@ -166,11 +166,93 @@ export class CmdbService {
     return { total, message: 'Taxonomía ITIL v4 creada exitosamente' };
   }
 
-  async getCategorias(): Promise<CmdbCategoria[]> {
-    return this.catRepo.find({
+  async getCategorias(): Promise<any[]> {
+    const list = await this.catRepo.find({
+      where: { activo: true },
       order: { nivel: 'ASC', codigo: 'ASC' },
       relations: ['parent'],
     });
+
+    // Conteo de CIs asignados por categoría hoja
+    const countsRaw = await this.ciRepo
+      .createQueryBuilder('ci')
+      .select('ci.categoriaId', 'categoriaId')
+      .addSelect('COUNT(ci.id)', 'count')
+      .where('ci.activo = :activo', { activo: true })
+      .groupBy('ci.categoriaId')
+      .getRawMany();
+
+    const directCounts = new Map<number, number>();
+    for (const r of countsRaw) {
+      directCounts.set(Number(r.categoriaId), parseInt(r.count, 10));
+    }
+
+    // Mapa de categorías agrupadas por parentId
+    const childrenMap = new Map<number | null, CmdbCategoria[]>();
+    for (const cat of list) {
+      const pId = cat.parentId ?? null;
+      if (!childrenMap.has(pId)) {
+        childrenMap.set(pId, []);
+      }
+      childrenMap.get(pId)!.push(cat);
+    }
+
+    // Cálculo acumulativo de CIs (hojas -> familias -> macros)
+    const totalCounts = new Map<number, number>();
+    const computeTotal = (catId: number): number => {
+      const direct = directCounts.get(catId) || 0;
+      const children = childrenMap.get(catId) || [];
+      let sum = direct;
+      for (const child of children) {
+        sum += computeTotal(child.id);
+      }
+      totalCounts.set(catId, sum);
+      return sum;
+    };
+
+    const roots = childrenMap.get(null) || [];
+    for (const r of roots) {
+      computeTotal(r.id);
+    }
+
+    // Recorrido en árbol jerárquico ordenado (Macro -> Familias -> Clases)
+    const result: any[] = [];
+    const traverse = (parentId: number | null) => {
+      const children = childrenMap.get(parentId) || [];
+      children.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      for (const child of children) {
+        result.push({
+          ...child,
+          conteoCis: totalCounts.get(child.id) || directCounts.get(child.id) || 0,
+        });
+        traverse(child.id);
+      }
+    };
+
+    traverse(null);
+
+    return result.length > 0
+      ? result
+      : list.map((c) => ({
+          ...c,
+          conteoCis: totalCounts.get(c.id) || directCounts.get(c.id) || 0,
+        }));
+  }
+
+  async getDescendantCategoryIds(catId: number): Promise<number[]> {
+    const allCats = await this.catRepo.find({ where: { activo: true }, select: ['id', 'parentId'] });
+    const result = new Set<number>([catId]);
+    let added = true;
+    while (added) {
+      added = false;
+      for (const cat of allCats) {
+        if (cat.parentId && result.has(cat.parentId) && !result.has(cat.id)) {
+          result.add(cat.id);
+          added = true;
+        }
+      }
+    }
+    return Array.from(result);
   }
 
   async createCategoria(dto: CreateCmdbCategoriaDto): Promise<CmdbCategoria> {
@@ -463,8 +545,9 @@ export class CmdbService {
       });
     }
 
-    if (query.categoriaId) {
-      qb.andWhere('ci.categoriaId = :catId', { catId: query.categoriaId });
+    if (query.categoriaId && !isNaN(Number(query.categoriaId))) {
+      const catIds = await this.getDescendantCategoryIds(Number(query.categoriaId));
+      qb.andWhere('ci.categoriaId IN (:...catIds)', { catIds });
     }
 
     if (query.estado) {
@@ -489,7 +572,7 @@ export class CmdbService {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.max(1, Math.ceil(total / limit)),
       duracionMs,
     };
   }

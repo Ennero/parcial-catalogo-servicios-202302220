@@ -186,7 +186,7 @@ export default function CmdbPage() {
             </div>
             <div className="h-3 w-[1px] bg-zinc-300" />
             <div>
-              Página: <span className="font-semibold text-zinc-900">{page}</span> de {totalPages}
+              Página: <span className="font-semibold text-zinc-900">{total === 0 ? 0 : page}</span> de {totalPages}
             </div>
             <div className="h-3 w-[1px] bg-zinc-300" />
             <div>
@@ -204,7 +204,10 @@ export default function CmdbPage() {
                   type="text"
                   placeholder="CI-SRV-..., 10.14..., Dell..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   className="w-full pl-8 pr-3 py-1.5 border border-zinc-200 rounded-md bg-white focus:outline-none"
                 />
               </div>
@@ -214,15 +217,36 @@ export default function CmdbPage() {
               <label className="block text-zinc-500 font-medium mb-1">Categoría / Clase</label>
               <select
                 value={selectedCatId}
-                onChange={(e) => setSelectedCatId(e.target.value)}
-                className="w-full px-2.5 py-1.5 border border-zinc-200 rounded-md bg-white focus:outline-none"
+                onChange={(e) => {
+                  setSelectedCatId(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full px-2.5 py-1.5 border border-zinc-200 rounded-md bg-white focus:outline-none font-mono text-[11px]"
               >
-                <option value="">Todas las categorías</option>
-                {categorias.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {'—'.repeat(c.nivel - 1)} {c.nombre}
-                  </option>
-                ))}
+                <option value="">Todas las categorías ({total.toLocaleString()} CIs)</option>
+                {categorias.map((c) => {
+                  const prefix =
+                    c.nivel === 1
+                      ? '📁 '
+                      : c.nivel === 2
+                      ? '  ├── 📂 '
+                      : '      └── 🏷️ ';
+                  return (
+                    <option
+                      key={c.id}
+                      value={c.id}
+                      className={
+                        c.nivel === 1
+                          ? 'font-bold text-zinc-900 bg-zinc-100'
+                          : c.nivel === 2
+                          ? 'font-semibold text-zinc-700'
+                          : 'text-zinc-600'
+                      }
+                    >
+                      {prefix} {c.nombre} {c.conteoCis !== undefined ? '(' + c.conteoCis + ')' : ''}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
@@ -230,7 +254,10 @@ export default function CmdbPage() {
               <label className="block text-zinc-500 font-medium mb-1">Estado</label>
               <select
                 value={filterEstado}
-                onChange={(e) => setFilterEstado(e.target.value)}
+                onChange={(e) => {
+                  setFilterEstado(e.target.value);
+                  setPage(1);
+                }}
                 className="w-full px-2.5 py-1.5 border border-zinc-200 rounded-md bg-white focus:outline-none"
               >
                 <option value="">Todos los estados</option>
@@ -248,7 +275,10 @@ export default function CmdbPage() {
                 type="text"
                 placeholder="Datacenter, Edificio T3..."
                 value={filterUbicacion}
-                onChange={(e) => setFilterUbicacion(e.target.value)}
+                onChange={(e) => {
+                  setFilterUbicacion(e.target.value);
+                  setPage(1);
+                }}
                 className="w-full px-3 py-1.5 border border-zinc-200 rounded-md bg-white focus:outline-none"
               />
             </div>
@@ -275,6 +305,15 @@ export default function CmdbPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-100">
+                  {cis.length === 0 && !loading && (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-zinc-500">
+                        <AlertCircle className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+                        <p className="font-medium text-sm">No se encontraron elementos de configuración</p>
+                        <p className="text-zinc-400 text-xs mt-1">Pruebe ajustando los filtros de búsqueda o categoría.</p>
+                      </td>
+                    </tr>
+                  )}
                   {cis.map((ci) => {
                     const isSelected = selectedCi?.id === ci.id;
                     return (
@@ -335,7 +374,7 @@ export default function CmdbPage() {
             {/* Paginación */}
             <div className="p-3 border-t border-zinc-200 bg-zinc-50/60 flex items-center justify-between text-xs">
               <span className="text-zinc-500">
-                Mostrando {(page - 1) * limit + 1} - {Math.min(page * limit, total)} de {total}
+                Mostrando {total === 0 ? 0 : (page - 1) * limit + 1} - {Math.min(page * limit, total)} de {total}
               </span>
               <div className="flex items-center gap-2">
                 <button
