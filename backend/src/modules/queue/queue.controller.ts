@@ -22,7 +22,7 @@ import { RolesGuard } from '../../common/roles.guard';
 import { Roles } from '../../common/roles.decorator';
 import { UserRole } from '../../entities/usuario.entity';
 
-@Controller('colas')
+@Controller(['api/colas', 'colas', 'api/queues'])
 export class QueueController {
   constructor(private readonly queueService: QueueService) {}
 

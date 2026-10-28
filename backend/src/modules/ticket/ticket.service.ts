@@ -915,8 +915,8 @@ export class TicketService {
 
       for (let i = 1; i <= 5; i++) {
         const srv = serviciosN2[(contadorCreados + i) % serviciosN2.length];
-        const solicitante = usuarios[i % usuarios.length];
-        const agente = usuarios[(i + 1) % usuarios.length];
+        const solicitante = usuarios[(contadorCreados + i) % usuarios.length];
+        const agente = usuarios[(contadorCreados + i + 1) % usuarios.length];
 
         let titulo = '';
         let desc = '';
@@ -1119,6 +1119,54 @@ export class TicketService {
           'Toda solicitud de nuevo servicio debe canalizarse mediante la cola de Nuevos Servicios con un análisis preliminar de justificación, usuarios beneficiarios y viabilidad técnica.',
         visitas: 45,
         utilCount: 30,
+      },
+      {
+        titulo: '¿Cómo solicitar accesos elevados o credenciales a bases de datos y VPN?',
+        categoria: 'Cuentas y Accesos',
+        contenido:
+          'Genere un ticket en la cola de Gestión de Accesos indicando el recurso específico, rol requerido y justificación laboral. La solicitud requiere aprobación de su jefatura inmediata.',
+        visitas: 180,
+        utilCount: 115,
+      },
+      {
+        titulo: '¿Qué es una Solicitud de Cambio (RFC) y cuál es el rol del comité CAB?',
+        categoria: 'Gestión de Cambios',
+        contenido:
+          'Una RFC documenta modificaciones en infraestructura o software de producción. Debe incluir CIs afectados, plan de pruebas y plan de reversión (rollback), y ser aprobada formalmente por el comité CAB antes de su ejecución.',
+        visitas: 130,
+        utilCount: 92,
+      },
+      {
+        titulo: '¿Cómo actuar ante incidentes de seguridad de la información (Categoría I6)?',
+        categoria: 'Seguridad',
+        contenido:
+          'Notifique de inmediato por el canal de incidentes críticos o monitoreo E3. Desconecte el equipo de la red sin apagarlo para preservar evidencia forense y espere instrucciones del equipo de Seguridad.',
+        visitas: 265,
+        utilCount: 198,
+      },
+      {
+        titulo: '¿Qué información debo incluir al solicitar soporte sobre un equipo o CI físico?',
+        categoria: 'Infraestructura TI',
+        contenido:
+          'Indique la etiqueta o código de CI (ej. CI-SRV-..., CI-SW-...), su ubicación física exacta, fabricante, modelo y una descripción del síntoma o falla observada.',
+        visitas: 88,
+        utilCount: 54,
+      },
+      {
+        titulo: '¿Cómo consultar el avance y la bitácora de auditoría de mis solicitudes?',
+        categoria: 'Soporte General',
+        contenido:
+          'En la sección Mis Solicitudes del Portal o en la Consola de Tickets, haga clic en el número de ticket para ver el estado, técnico asignado, bitácora de transiciones y comentarios públicos.',
+        visitas: 310,
+        utilCount: 240,
+      },
+      {
+        titulo: '¿Cuáles son los tiempos de respuesta y SLAs según la prioridad del incidente?',
+        categoria: 'Service Desk',
+        contenido:
+          'Prioridad Crítica/Muy Alta (I6): 15 min de atención y 4h de resolución. Prioridad Alta (I3-I5): 30 min atención y 8h resolución. Prioridad Media (I1-I2): 1h atención y 24h resolución. Prioridad Baja (I0): 4h atención y 48h resolución.',
+        visitas: 420,
+        utilCount: 315,
       },
     ];
 

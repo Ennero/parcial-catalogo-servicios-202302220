@@ -11,13 +11,16 @@ async function handle(req: NextRequest, { params }: { params: { path: string[] }
   const targetUrl = `${backendBase}/api/${path}${query}`;
 
   const headers = new Headers();
-  req.headers.forEach((value, key) => {
-    if (key.toLowerCase() !== 'host' && key.toLowerCase() !== 'content-length') {
-      headers.set(key, value);
-    }
-  });
+  const auth = req.headers.get('authorization');
+  if (auth) headers.set('authorization', auth);
 
-  const fetchOptions: RequestInit = {
+  const contentType = req.headers.get('content-type');
+  if (contentType) headers.set('content-type', contentType);
+
+  const accept = req.headers.get('accept');
+  if (accept) headers.set('accept', accept);
+
+  const fetchOptions: any = {
     method: req.method,
     headers,
     cache: 'no-store',
@@ -25,16 +28,24 @@ async function handle(req: NextRequest, { params }: { params: { path: string[] }
 
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     fetchOptions.body = await req.text();
+    fetchOptions.duplex = 'half';
   }
 
   try {
-    const res = await fetch(targetUrl, fetchOptions);
+    let res = await fetch(targetUrl, fetchOptions);
+    if (res.status === 404) {
+      const fallbackUrl = `${backendBase}/${path}${query}`;
+      const fallbackRes = await fetch(fallbackUrl, fetchOptions);
+      if (fallbackRes.status !== 404) {
+        res = fallbackRes;
+      }
+    }
     const body = await res.arrayBuffer();
 
     const responseHeaders = new Headers();
-    const contentType = res.headers.get('content-type');
-    if (contentType) {
-      responseHeaders.set('content-type', contentType);
+    const resContentType = res.headers.get('content-type');
+    if (resContentType) {
+      responseHeaders.set('content-type', resContentType);
     }
 
     return new NextResponse(body, {
@@ -44,7 +55,10 @@ async function handle(req: NextRequest, { params }: { params: { path: string[] }
     });
   } catch (err: any) {
     return NextResponse.json(
-      { message: `Error conectando con el backend (${targetUrl}): ${err.message}` },
+      {
+        message: `Error conectando con el backend (${targetUrl}): ${err.message}`,
+        cause: err.cause?.message || String(err.cause),
+      },
       { status: 502 },
     );
   }

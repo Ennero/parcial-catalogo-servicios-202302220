@@ -22,7 +22,7 @@ import { RolesGuard } from '../../common/roles.guard';
 import { Roles } from '../../common/roles.decorator';
 import { UserRole } from '../../entities/usuario.entity';
 
-@Controller('cmdb')
+@Controller(['api/cmdb', 'cmdb'])
 export class CmdbController {
   constructor(private readonly cmdbService: CmdbService) {}
 

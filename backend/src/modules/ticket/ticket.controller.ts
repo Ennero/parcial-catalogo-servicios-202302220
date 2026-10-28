@@ -25,7 +25,7 @@ import { RolesGuard } from '../../common/roles.guard';
 import { Roles } from '../../common/roles.decorator';
 import { UserRole } from '../../entities/usuario.entity';
 
-@Controller('tickets')
+@Controller(['api/tickets', 'tickets'])
 @UseGuards(JwtAuthGuard)
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
