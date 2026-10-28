@@ -20,9 +20,9 @@ import {
   RelacionarTicketsDto,
   CreateFaqDto,
 } from './dto/ticket.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/jwt-auth.guard';
+import { RolesGuard } from '../../common/roles.guard';
+import { Roles } from '../../common/roles.decorator';
 import { UserRole } from '../../entities/usuario.entity';
 
 @Controller('tickets')

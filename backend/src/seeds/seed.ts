@@ -13,7 +13,24 @@ import { ServicioN1 } from '../entities/servicio-n1.entity';
 import { ServicioN2 } from '../entities/servicio-n2.entity';
 import { ImportacionLog } from '../entities/importacion-log.entity';
 import { ImportacionObservacion } from '../entities/importacion-observacion.entity';
+import { CmdbCategoria } from '../entities/cmdb-categoria.entity';
+import { CmdbCi } from '../entities/cmdb-ci.entity';
+import { CmdbRelacion } from '../entities/cmdb-relacion.entity';
+import { CmdbCiServicio } from '../entities/cmdb-ci-servicio.entity';
+import { ColaAtencion } from '../entities/cola-atencion.entity';
+import { ColaUsuario } from '../entities/cola-usuario.entity';
+import { ColaRol } from '../entities/cola-rol.entity';
+import { Ticket } from '../entities/ticket.entity';
+import { TicketComentario } from '../entities/ticket-comentario.entity';
+import { TicketAdjunto } from '../entities/ticket-adjunto.entity';
+import { TicketBitacora } from '../entities/ticket-bitacora.entity';
+import { TicketRelacion } from '../entities/ticket-relacion.entity';
+import { TicketCi } from '../entities/ticket-ci.entity';
+import { FaqArticulo } from '../entities/faq-articulo.entity';
 import { ImporterService } from '../modules/importer/importer.service';
+import { CmdbService } from '../modules/cmdb/cmdb.service';
+import { QueueService } from '../modules/queue/queue.service';
+import { TicketService } from '../modules/ticket/ticket.service';
 
 export async function runSeeds(dataSource: DataSource) {
   console.log('--- INICIANDO SEEDS DE EVALUACIÓN Y VALORES DE PRUEBA ---');
@@ -385,6 +402,7 @@ export async function runSeeds(dataSource: DataSource) {
     rol: UserRole,
     activo: boolean,
     puestoId: number,
+    rolesSecundarios: string | null = null,
   ) => {
     let usr = await usuarioRepo.findOne({ where: { email } });
     if (!usr) {
@@ -395,11 +413,15 @@ export async function runSeeds(dataSource: DataSource) {
           email,
           passwordHash: await bcrypt.hash(plainPassword, salt),
           rol,
+          rolesSecundarios,
           activo,
           puestoId,
         }),
       );
       console.log(`Usuario creado: ${email} (${rol}) [Activo: ${activo}]`);
+    } else if (rolesSecundarios && !usr.rolesSecundarios) {
+      usr.rolesSecundarios = rolesSecundarios;
+      await usuarioRepo.save(usr);
     }
     return usr;
   };
@@ -408,6 +430,11 @@ export async function runSeeds(dataSource: DataSource) {
   const userAdmin = await ensureUser('admin@usac.edu', 'admin', 'Administrador General', 'Admin123!', UserRole.ADMINISTRADOR, true, puestoAdmin.id);
   const userConsulta = await ensureUser('consulta@usac.edu', 'consulta', 'Auditor de Consulta', 'Consulta123!', UserRole.CONSULTA, true, puestoConsulta.id);
   const userDevLead = await ensureUser('devlead@usac.edu', 'devlead', 'Ingeniero Líder de Aplicaciones', 'DevLead123!', UserRole.ADMINISTRADOR, true, puestoDevLead.id);
+
+  // Cuentas de Service Desk (Evaluación P06, P07, P10, P11)
+  const userAgente = await ensureUser('agente@usac.edu', 'agente', 'Agente Soporte Service Desk', 'Agente123!', UserRole.AGENTE, true, puestoHd.id, 'agente');
+  const userAprobador = await ensureUser('aprobador@usac.edu', 'aprobador', 'Miembro Aprobador CAB', 'Aprobador123!', UserRole.APROBADOR, true, puestoCiso.id, 'aprobador');
+  const userSolicitante = await ensureUser('solicitante@usac.edu', 'solicitante', 'Usuario Solicitante Institucional', 'Solicitante123!', UserRole.SOLICITANTE, true, puestoDev.id, 'solicitante');
 
   // Cuentas Complementarias de Prueba
   const userSeg = await ensureUser('seguridad@usac.edu', 'seguridad', 'Oficial de Seguridad TI', 'Seguridad123!', UserRole.ADMINISTRADOR, true, puestoCiso.id);
@@ -470,6 +497,117 @@ export async function runSeeds(dataSource: DataSource) {
   // Asignaciones en Business Intelligence (SEC-BI)
   await assignRaci('SE.12.1', seccionBi.id, userAnalista.id, 1, 24, 'Horas Frecuencia Refresco Tableros');
   await assignRaci('SE.12.2', seccionBi.id, userAnalista.id, 2, 48, 'Horas Entrega Análisis de Información');
+
+  // -------------------------------------------------------------
+  // 6. Taxonomía de CMDB y Generador Sintético de 5,000 Dispositivos
+  // -------------------------------------------------------------
+  console.log('Inicializando jerarquía CMDB y generando 5,000 CIs sintéticos persistidos...');
+  const catRepo = dataSource.getRepository(CmdbCategoria);
+  const ciRepo = dataSource.getRepository(CmdbCi);
+  const relRepo = dataSource.getRepository(CmdbRelacion);
+  const ciSrvRepo = dataSource.getRepository(CmdbCiServicio);
+
+  const cmdbService = new CmdbService(
+    catRepo,
+    ciRepo,
+    relRepo,
+    ciSrvRepo,
+    usuarioRepo,
+    s2Repo,
+    s1Repo,
+  );
+  await cmdbService.seedCategories();
+  await cmdbService.generateSyntheticDevices({ cantidad: 5000, semilla: 202302220 });
+
+  // -------------------------------------------------------------
+  // 7. Colas de Atención para los 7 Procesos ITIL y Permisos RBAC
+  // -------------------------------------------------------------
+  console.log('Inicializando colas de atención para los 7 procesos y asignando roles...');
+  const colaRepo = dataSource.getRepository(ColaAtencion);
+  const colaUsuarioRepo = dataSource.getRepository(ColaUsuario);
+  const colaRolRepo = dataSource.getRepository(ColaRol);
+  const ticketRepo = dataSource.getRepository(Ticket);
+  const bitacoraRepo = dataSource.getRepository(TicketBitacora);
+
+  const queueService = new QueueService(
+    colaRepo,
+    colaUsuarioRepo,
+    colaRolRepo,
+    usuarioRepo,
+    ticketRepo,
+    bitacoraRepo,
+  );
+  await queueService.seedDefaultQueues();
+
+  const colas = await queueService.getColas();
+  for (const c of colas) {
+    // Permisos a nivel de roles en cada cola
+    await queueService.asignarRolACola({
+      colaId: c.id,
+      rol: 'agente',
+      puedeConsultar: true,
+      puedeAtender: true,
+      puedeTransferir: true,
+      puedeAprobar: false,
+    });
+    await queueService.asignarRolACola({
+      colaId: c.id,
+      rol: 'aprobador',
+      puedeConsultar: true,
+      puedeAtender: false,
+      puedeTransferir: false,
+      puedeAprobar: true,
+    });
+    await queueService.asignarRolACola({
+      colaId: c.id,
+      rol: 'consulta',
+      puedeConsultar: true,
+      puedeAtender: false,
+      puedeTransferir: false,
+      puedeAprobar: false,
+    });
+
+    // Asignación directa de usuarios de prueba
+    await queueService.asignarUsuarioACola({
+      colaId: c.id,
+      usuarioId: userAgente.id,
+      puedeConsultar: true,
+      puedeAtender: true,
+      puedeTransferir: true,
+    });
+    await queueService.asignarUsuarioACola({
+      colaId: c.id,
+      usuarioId: userAprobador.id,
+      puedeConsultar: true,
+      puedeAprobar: true,
+    });
+  }
+
+  // -------------------------------------------------------------
+  // 8. Generación de al menos 35 Tickets Demo y Base de Conocimientos
+  // -------------------------------------------------------------
+  console.log('Inicializando 35 tickets demo para los 7 procesos y FAQs...');
+  const comRepo = dataSource.getRepository(TicketComentario);
+  const adjRepo = dataSource.getRepository(TicketAdjunto);
+  const relTicketRepo = dataSource.getRepository(TicketRelacion);
+  const ticketCiRepo = dataSource.getRepository(TicketCi);
+  const faqRepo = dataSource.getRepository(FaqArticulo);
+
+  const ticketService = new TicketService(
+    ticketRepo,
+    comRepo,
+    adjRepo,
+    bitacoraRepo,
+    relTicketRepo,
+    ticketCiRepo,
+    faqRepo,
+    usuarioRepo,
+    s1Repo,
+    s2Repo,
+    colaRepo,
+    ciRepo,
+  );
+  await ticketService.seedDemoTickets();
 
   console.log('--- SEEDS Y VALORES DE PRUEBA COMPLETADOS CON ÉXITO ---');
 }

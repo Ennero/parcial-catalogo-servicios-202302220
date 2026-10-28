@@ -22,7 +22,13 @@ export class RolesGuard implements CanActivate {
       throw new ForbiddenException('Acceso no autorizado: No se identificó usuario en la sesión.');
     }
 
-    const hasRole = requiredRoles.includes(user.rol);
+    const secondaryRoles = user.rolesSecundarios
+      ? user.rolesSecundarios.split(',').map((r: string) => r.trim())
+      : [];
+    const hasRole =
+      requiredRoles.includes(user.rol) ||
+      secondaryRoles.some((r: string) => requiredRoles.includes(r as UserRole));
+
     if (!hasRole) {
       throw new ForbiddenException(
         `Acceso denegado: El rol '${user.rol}' no tiene permisos para realizar esta operación.`,

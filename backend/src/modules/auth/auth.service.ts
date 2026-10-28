@@ -40,7 +40,12 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.identifier, loginDto.password);
-    const payload = { sub: user.id, username: user.username, rol: user.rol };
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      rol: user.rol,
+      rolesSecundarios: user.rolesSecundarios,
+    };
 
     const token = this.jwtService.sign(payload);
 
@@ -52,6 +57,7 @@ export class AuthService {
         username: user.username,
         email: user.email,
         rol: user.rol,
+        rolesSecundarios: user.rolesSecundarios,
         activo: user.activo,
         puesto: user.puesto
           ? {

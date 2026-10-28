@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Script de Ejecución del Harness de Pruebas Automatizadas (P01 - P12)
+# Script de Ejecución del Harness de Pruebas Automatizadas (P01 - P18)
 # ==============================================================================
 
 set -e
 
 echo "=========================================================="
-echo " Ejecutando Suite de Pruebas Automatizadas (P01 - P12)..."
+echo " Ejecutando Suite de Pruebas Automatizadas (P01 - P18)..."
 echo "=========================================================="
 
 if command -v docker &> /dev/null && docker compose ps &> /dev/null; then
