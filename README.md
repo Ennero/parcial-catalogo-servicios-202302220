@@ -1,4 +1,23 @@
-# Service Desk & CMDB con Ingeniería Asistida por IA (Parcial Práctico 3)
+<div align="center">
+
+# 📦 Microservices Service Catalog API in TypeScript
+
+**API REST de catálogo de servicios bajo arquitectura de microservicios con TypeScript, Express y Docker.**
+
+[![Language](https://img.shields.io/badge/Language-TypeScript,%20Docker-blue?style=for-the-badge)](https://github.com/Ennero/parcial-catalogo-servicios-202302220)
+[![Course](https://img.shields.io/badge/Course-Software%20Avanzado%20/%20Arquitectura-003366?style=for-the-badge)](https://ingenieria.usac.edu.gt/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+</div>
+
+---
+
+
+## 📌 Contexto Académico
+
+Proyecto desarrollado en el marco del curso **Software Avanzado / Arquitectura** de la carrera de Ingeniería en Ciencias y Sistemas en la Universidad de San Carlos de Guatemala (USAC).
+
+---
 
 **Asignatura:** Software Avanzado — Universidad de San Carlos de Guatemala  
 **Estudiante:** Enner (Carné: 202302220)  
@@ -127,3 +146,16 @@ Los detalles exhaustivos solicitados en la rúbrica se encuentran organizados en
   ```bash
   docker compose down -v
   ```
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 👨‍💻 Autor
+
+- **Enner Mendizabal** - [@Ennero](https://github.com/Ennero)  
+- *Facultad de Ingeniería, Universidad de San Carlos de Guatemala.*
