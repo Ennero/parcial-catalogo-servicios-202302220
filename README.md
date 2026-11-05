@@ -1,30 +1,13 @@
-<div align="center">
+# Service Desk y CMDB con NestJS, Next.js y MariaDB
 
-# 📦 Microservices Service Catalog API in TypeScript
+Aplicación de catálogo de servicios y gestión de tickets ITIL con CMDB, control de acceso por roles y un harness local de evaluación.
 
-**API REST de catálogo de servicios bajo arquitectura de microservicios con TypeScript, Express y Docker.**
-
-[![Language](https://img.shields.io/badge/Language-TypeScript,%20Docker-blue?style=for-the-badge)](https://github.com/Ennero/parcial-catalogo-servicios-202302220)
-[![Course](https://img.shields.io/badge/Course-Software%20Avanzado%20/%20Arquitectura-003366?style=for-the-badge)](https://ingenieria.usac.edu.gt/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-
-</div>
-
----
-
-
-## 📌 Contexto Académico
-
-Proyecto desarrollado en el marco del curso **Software Avanzado / Arquitectura** de la carrera de Ingeniería en Ciencias y Sistemas en la Universidad de San Carlos de Guatemala (USAC).
-
----
-
-**Asignatura:** Software Avanzado — Universidad de San Carlos de Guatemala  
-**Estudiante:** Enner (Carné: 202302220)  
-**Catedrático Evaluador:** Marco Tulio Aldana Prillwitz (`maldanap-usac`)  
-**Fecha de Entrega:** Octubre 2026  
-**Versión y Etiqueta:** `tarea-v3.0`  
-**Repositorio Oficial:** `https://github.com/Ennero/parcial-catalogo-servicios-202302220`  
+**Asignatura:** Software Avanzado — Universidad de San Carlos de Guatemala<br>
+**Estudiante:** Enner (Carné: 202302220)<br>
+**Catedrático Evaluador:** Marco Tulio Aldana Prillwitz (`maldanap-usac`)<br>
+**Fecha de Entrega:** Octubre 2026<br>
+**Versión y Etiqueta:** `tarea-v3.0`<br>
+**Repositorio Oficial:** `https://github.com/Ennero/parcial-catalogo-servicios-202302220`<br>
 
 ---
 
@@ -127,12 +110,12 @@ El script ejecuta secuencialmente los 18 escenarios, reporta tiempos de ejecuci�
 
 Los detalles exhaustivos solicitados en la rúbrica se encuentran organizados en la carpeta `docs/`:
 
-- [docs/RESOLUCION.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/docs/RESOLUCION.md): Alcance, arquitectura, decisiones técnicas, limitaciones y desglose de la rúbrica de 100 puntos.
-- [docs/MODELO.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/docs/MODELO.md): Diagrama Entidad-Relación Mermaid, diccionario de datos, jerarquía CMDB y mapeo de fuentes.
-- [docs/PROCESOS.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/docs/PROCESOS.md): Mapeo Diapositiva 14 a los 7 procesos, colas, matriz RBAC, diagramas de estado, concurrencia y soporte L0-L4.
-- [docs/IA.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/docs/IA.md): Evidencias verificables de Prompt Engineering (8 prompts + 2 mejoras), Context Engineering (`AGENTS.md`), Harness, Loop (3 ciclos con fallos deliberados) y Graph Engineering.
-- [docs/PRUEBAS.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/docs/PRUEBAS.md): Matriz de trazabilidad Requisito $\rightarrow$ Implementación $\rightarrow$ Prueba $\rightarrow$ Evidencia con resultados reales de P01 a P18.
-- [AGENTS.md](file:///c:/Users/Enner/Desktop/parcial-catalogo-servicios-202302220/AGENTS.md): Contexto normativo versionado (v2.0.0) y reglas de Data Trust Boundary.
+- [docs/RESOLUCION.md](docs/RESOLUCION.md): Alcance, arquitectura, decisiones técnicas, limitaciones y desglose de la rúbrica de 100 puntos.
+- [docs/MODELO.md](docs/MODELO.md): Diagrama Entidad-Relación Mermaid, diccionario de datos, jerarquía CMDB y mapeo de fuentes.
+- [docs/PROCESOS.md](docs/PROCESOS.md): Mapeo Diapositiva 14 a los 7 procesos, colas, matriz RBAC, diagramas de estado, concurrencia y soporte L0-L4.
+- [docs/IA.md](docs/IA.md): Evidencias verificables de Prompt Engineering (8 prompts + 2 mejoras), Context Engineering (`AGENTS.md`), Harness, Loop (3 ciclos con fallos deliberados) y Graph Engineering.
+- [docs/PRUEBAS.md](docs/PRUEBAS.md): Matriz de trazabilidad Requisito $\rightarrow$ Implementación $\rightarrow$ Prueba $\rightarrow$ Evidencia con resultados reales de P01 a P18.
+- [AGENTS.md](AGENTS.md): Contexto normativo versionado (v2.0.0) y reglas de Data Trust Boundary.
 
 ---
 
@@ -146,16 +129,3 @@ Los detalles exhaustivos solicitados en la rúbrica se encuentran organizados en
   ```bash
   docker compose down -v
   ```
-
----
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-## 👨‍💻 Autor
-
-- **Enner Mendizabal** - [@Ennero](https://github.com/Ennero)  
-- *Facultad de Ingeniería, Universidad de San Carlos de Guatemala.*
